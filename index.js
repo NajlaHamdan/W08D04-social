@@ -9,8 +9,8 @@ dotenv.config();
 app.use(express.json());
 app.use(cors());
 
-const postRouter = require("./router/routes/post");
-app.use( postRouter);
+const roleRouter = require("./router/routes/role");
+app.use( roleRouter);
 
 const registerRouter = require("./router/routes/user");
 app.use(registerRouter);
@@ -18,8 +18,11 @@ app.use(registerRouter);
 // const loginRouter = require("./routers/routes/user");
 // app.use( loginRouter);
 
-const roleRouter = require("./router/routes/role");
-app.use( roleRouter);
+const postRouter = require("./router/routes/post");
+app.use( postRouter);
+
+const commentRouter = require("./router/routes/comment");
+app.use( commentRouter);
 
 const port = process.env.PORT;
 app.listen(port, () => {
