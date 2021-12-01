@@ -6,11 +6,11 @@
 - bcrypt
 - mongoose
 # Schemas
--uesr
--role
--post
--comment
--like
+- uesr
+- role
+- post
+- comment
+- like
 # functions
 user can do to his/her comments and posts the following functions
 if the user has been registered or logged in  
