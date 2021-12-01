@@ -24,6 +24,9 @@ app.use( postRouter);
 const commentRouter = require("./router/routes/comment");
 app.use( commentRouter);
 
+const likeRouter = require("./router/routes/like");
+app.use( likeRouter);
+
 const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`server is running on ${port}`);

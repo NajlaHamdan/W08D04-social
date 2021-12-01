@@ -84,7 +84,7 @@ const updateById = async (req, res) => {
   }
 };
 
-const deleteTodo = async (req, res) => {
+const deletePost = async (req, res) => {
   try {
     const { id, todoId } = req.params;
     await userModel.findById(id).then(async (result) => {
@@ -110,4 +110,4 @@ const deleteTodo = async (req, res) => {
     res.status("404").json(err);
   }
 };
-module.exports = { createPost, getPosts, updateById, deleteTodo };
+module.exports = { createPost, getPosts, updateById, deletePost };

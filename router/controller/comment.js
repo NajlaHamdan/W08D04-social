@@ -53,12 +53,12 @@ const getComment = async (req, res) => {
   }
 };
 
-const UpdateComment = async (req, res) => {
+const updateComment = async (req, res) => {
   try {
     const { id, commentId, desc } = req.body;
     await commentModel
       .findOne({ owner: id })
-      .then(async(result) => {
+      .then(async (result) => {
         if (result) {
           await commentModel
             .findByIdAndUpdate({ _id: commentId }, { desc })
@@ -80,4 +80,29 @@ const UpdateComment = async (req, res) => {
     res.status("404").json(err);
   }
 };
-module.exports = { createComment, getComment, UpdateComment };
+const deleteComment = async(req, res) => {
+  try {
+    const { id, commentId } = req.params;
+    await commentModel
+      .findOne({ owner: id })
+      .then(async (result) => {
+        if (result) {
+          await commentModel.deleteOne({ _id: commentId }).then((result) => {
+            if (result.deletedCount != 0) {
+              res.status("200").json(result);
+            } else {
+              res.status("404").json("already deleted");
+            }
+          });
+        } else {
+          res.status("404").json("can not access this comment");
+        }
+      })
+      .catch((err) => {
+        res.status("404").json(err);
+      });
+  } catch (err) {
+    res.status("404").json(err);
+  }
+};
+module.exports = { createComment, getComment, updateComment ,deleteComment};
