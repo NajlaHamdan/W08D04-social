@@ -6,6 +6,8 @@ const {
   login,
   getAllUsers,
   removeAllUsers,
+  deletePosts,
+  deleteComments
 } = require("./../controller/user");
 
 const authentication = require("./../middleware/authentication");
@@ -19,5 +21,17 @@ routerUser.delete(
 //   authentication,
 //   authorization,
   removeAllUsers
+);
+routerUser.delete(
+  "/deletePosts",
+//   authentication,
+//   authorization,
+deletePosts
+);
+routerUser.delete(
+  "/deleteComments",
+//   authentication,
+//   authorization,
+deleteComments
 );
 module.exports = routerUser;

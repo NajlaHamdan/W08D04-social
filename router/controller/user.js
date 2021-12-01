@@ -1,4 +1,6 @@
 const userModel = require("./../../db/models/user");
+const postModel = require("./../../db/models/post");
+const commentModel = require("./../../db/models/comment");
 // require("dotenv").config();already has configed
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -104,4 +106,32 @@ const removeAllUsers = async (req, res) => {
     res.status("404").json(err);
   }
 };
-module.exports = { register, login,getAllUsers ,removeAllUsers};
+const deletePosts = async (req, res) => {
+  try {
+    // find user to get his todos
+    postModel.remove({}).then(async (result) => {
+      if (result.deletedCount != 0) {
+        console.log(result);
+        res.status("200").json(result);
+      } else {
+        res.status("404").json("no posts");
+      }
+    });
+  } catch (err) {
+    res.status("404").json(err);
+  }}
+  const deleteComments = async (req, res) => {
+    try {
+      // find user to get his todos
+      commentModel.remove({}).then(async (result) => {
+        if (result.deletedCount != 0) {
+          console.log(result);
+          res.status("200").json(result);
+        } else {
+          res.status("404").json("no comments");
+        }
+      });
+    } catch (err) {
+      res.status("404").json(err);
+    }}
+module.exports = { register, login,getAllUsers ,removeAllUsers,deletePosts,deleteComments};
