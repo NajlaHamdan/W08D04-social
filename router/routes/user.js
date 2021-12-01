@@ -8,16 +8,16 @@ const {
   removeAllUsers,
 } = require("./../controller/user");
 
-// const authentication = require("./../middleware/authentication");
-// const authorization = require("./../middleware/authorization");
+const authentication = require("./../middleware/authentication");
+const authorization = require("./../middleware/authorization");
 
 routerUser.post("/createUser", register);
 routerUser.post("/login", login);
-// routerUser.get("/getAllUsers", getAllUsers);
-// routerUser.delete(
-//   "/removeAllUsers",
-// //   authentication,
-// //   authorization,
-//   removeAllUsers
-// );
+routerUser.get("/getAllUsers", getAllUsers);
+routerUser.delete(
+  "/removeAllUsers",
+//   authentication,
+//   authorization,
+  removeAllUsers
+);
 module.exports = routerUser;
