@@ -7,24 +7,23 @@ const user = new mongoose.Schema({
     lowercase: true,
     unique: true,
   },
-  password: {type:String,required:true},
-  role: [{ type: mongoose.Schema.Types.ObjectId ,ref:"role"}],
+  password: { type: String, required: true },
+  userName: { type: String, required: true, unique: true },
+  avatar: { type: String },
+  role: [{ type: mongoose.Schema.Types.ObjectId, ref: "role" }],
   posts: [
     {
-      type:{type: mongoose.Schema.Types.ObjectId,
-      ref:"post"},
+      type: { type: mongoose.Schema.Types.ObjectId, ref: "post" },
     },
   ],
   comments: [
     {
-      type:{type: mongoose.Schema.Types.ObjectId,
-      ref:"comment"},
+      type: { type: mongoose.Schema.Types.ObjectId, ref: "comment" },
     },
   ],
   likes: [
     {
-      type:{type: mongoose.Schema.Types.ObjectId,
-      ref:"like"},
+      type: { type: mongoose.Schema.Types.ObjectId, ref: "like" },
     },
   ],
 });
