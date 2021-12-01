@@ -83,7 +83,34 @@ const updateById = async (req, res) => {
     res.status("404").json(err);
   }
 };
-
+//soft delete
+const SoftDelPost = async (req, res) => {
+  try {
+    const { id, postId, desc } = req.body;
+    await postModel
+      .findOne({ owner: id })
+      .then(async (result) => {
+        if (result) {
+          await postModel
+            .findByIdAndUpdate({ _id: postId }, { isDelete: true })
+            .then((result) => {
+              if (result) {
+                res.status("200").json(result);
+              } else {
+                res.status("404").json("no post with this id");
+              }
+            });
+        } else {
+          res.status("404").json("can not access this post");
+        }
+      })
+      .catch((err) => {
+        res.status("404").json(err);
+      });
+  } catch (err) {
+    res.status("404").json(err);
+  }
+};
 const deletePost = async (req, res) => {
   try {
     const { id, todoId } = req.params;
@@ -110,4 +137,4 @@ const deletePost = async (req, res) => {
     res.status("404").json(err);
   }
 };
-module.exports = { createPost, getPosts, updateById, deletePost };
+module.exports = { createPost, getPosts, updateById, deletePost, SoftDelPost };

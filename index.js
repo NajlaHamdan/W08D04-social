@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 const roleRouter = require("./router/routes/role");
-app.use( roleRouter);
+app.use(roleRouter);
 
 const registerRouter = require("./router/routes/user");
 app.use(registerRouter);
@@ -19,13 +19,13 @@ app.use(registerRouter);
 // app.use( loginRouter);
 
 const postRouter = require("./router/routes/post");
-app.use( postRouter);
+app.use(postRouter);
 
 const commentRouter = require("./router/routes/comment");
-app.use( commentRouter);
+app.use(commentRouter);
 
 const likeRouter = require("./router/routes/like");
-app.use( likeRouter);
+app.use(likeRouter);
 
 const port = process.env.PORT;
 app.listen(port, () => {

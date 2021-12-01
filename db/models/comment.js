@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const comment = new mongoose.Schema({
   desc: { type: String, required: true },
-  date: { type: Date,default:Date.now },
+  date: { type: Date, default: Date.now },
   isDelete: { type: Boolean, default: false },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
   post: { type: mongoose.Schema.Types.ObjectId, ref: "post" },

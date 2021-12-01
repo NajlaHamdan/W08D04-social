@@ -11,7 +11,7 @@ const register = async (req, res) => {
   const newUser = new userModel({
     role,
     email,
-    userName:hashed,
+    userName: hashed,
     password,
   });
   newUser
@@ -28,7 +28,7 @@ const login = (req, res) => {
   const { email, userName } = req.body;
   console.log("ppp");
   userModel
-    .findOne( { $or:[ {email:email}, {userName:userName} ]}) //with find will return email and say not valid if it is valid
+    .findOne({ $or: [{ email: email }, { userName: userName }] }) //with find will return email and say not valid if it is valid
     .then(async (result) => {
       if (result) {
         console.log(result);
@@ -41,7 +41,7 @@ const login = (req, res) => {
             expiresIn: "60m",
           };
           const token = await jwt.sign(payload, secret, options);
-             console.log(token);
+          console.log(token);
           const decrybtedName = await bcrypt.compare(userName, result.userName);
           if (decrybtedName) {
             res.status("200").json(result);
@@ -104,4 +104,4 @@ const login = (req, res) => {
 //     res.status("404").json(err);
 //   }
 // };
-module.exports = { register, login};
+module.exports = { register, login };

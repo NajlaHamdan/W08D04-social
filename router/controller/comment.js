@@ -52,7 +52,34 @@ const getComment = async (req, res) => {
     res.status("200").json(err);
   }
 };
-
+//soft delete
+const SoftDelComment = async (req, res) => {
+  try {
+    const { id, commentId, desc } = req.body;
+    await commentModel
+      .findOne({ owner: id })
+      .then(async (result) => {
+        if (result) {
+          await commentModel
+            .findByIdAndUpdate({ _id: commentId }, { isDelete: true })
+            .then((result) => {
+              if (result) {
+                res.status("200").json(result);
+              } else {
+                res.status("404").json("no comment with this id");
+              }
+            });
+        } else {
+          res.status("404").json("can not access this comment");
+        }
+      })
+      .catch((err) => {
+        res.status("404").json(err);
+      });
+  } catch (err) {
+    res.status("404").json(err);
+  }
+};
 const updateComment = async (req, res) => {
   try {
     const { id, commentId, desc } = req.body;
@@ -80,7 +107,7 @@ const updateComment = async (req, res) => {
     res.status("404").json(err);
   }
 };
-const deleteComment = async(req, res) => {
+const deleteComment = async (req, res) => {
   try {
     const { id, commentId } = req.params;
     await commentModel
@@ -105,4 +132,10 @@ const deleteComment = async(req, res) => {
     res.status("404").json(err);
   }
 };
-module.exports = { createComment, getComment, updateComment ,deleteComment};
+module.exports = {
+  createComment,
+  getComment,
+  updateComment,
+  deleteComment,
+  SoftDelComment,
+};
