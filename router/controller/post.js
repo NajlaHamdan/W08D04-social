@@ -73,14 +73,64 @@ const updateById = async (req, res) => {
           await post.save();
           res.status("200").json(post);
         } else {
-          res.status("404").json("there is no todo with this id");
+          res.status("404").json("there is no post with this id");
         }
       } else {
-        res.status("404").json("can not access this todo");
+        res.status("404").json("can not access this post");
       }
     });
   } catch (err) {
     res.status("404").json(err);
   }
 };
-module.exports = { createPost, getPosts, updateById };
+
+// const updateById = async (req, res) => {
+//   try {
+//     const { desc, id, postId } = req.body;
+//     //find user
+//     await postModel.findOne({ owner: id }).then(async (result) => {
+//       if (result) {
+//         const post = await postModel.findByIdAndUpdate(postId, { desc }); //.then(async (result) => {
+//         if (post) {
+//           console.log(post);
+//           await post.save();
+//           res.status("200").json(post);
+//         } else {
+//           res.status("404").json("there is no todo with this id");
+//         }
+//       } else {
+//         res.status("404").json("can not access this todo");
+//       }
+//     });
+//   } catch (err) {
+//     res.status("404").json(err);
+//   }
+// };
+
+const deleteTodo = async (req, res) => {
+  try {
+    const { id, todoId } = req.params;
+    await userModel.findById(id).then(async (result) => {
+      if (result) {
+        await postModel.find({ owner: id }).then(async (result) => {
+          if (result.length) {
+            await postModel.deleteOne({ id: todoId }).then((result) => {
+              if (result.deletedCount != 0) {
+                res.status("200").json(result);
+              } else {
+                res.status("404").json("already deleted");
+              }
+            });
+          } else {
+            res.status("404").json("this user does not have posts");
+          }
+        });
+      } else {
+        res.status("404").json("no user with this id");
+      }
+    });
+  } catch (err) {
+    res.status("404").json(err);
+  }
+};
+module.exports = { createPost, getPosts, updateById, deleteTodo };
