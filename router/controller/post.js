@@ -3,7 +3,7 @@ const userModel = require("./../../db/models/user");
 
 const createPost = async (req, res) => {
   try {
-    const { img, desc, date, id } = req.body;
+    const { img, desc, id } = req.body;
     const newPost = new postModel({
       img,
       desc,
@@ -137,4 +137,19 @@ const deletePost = async (req, res) => {
     res.status("404").json(err);
   }
 };
-module.exports = { createPost, getPosts, updateById, deletePost, SoftDelPost };
+//for admin
+const deletePostById=async(req,res)=>{
+  try {
+    const {id}=req.params;
+    postModel.deleteOne({_id:id}).then(async (result) => {
+      if (result.deletedCount != 0) {
+        console.log(result);
+        res.status("200").json(result);
+      } else {
+        res.status("404").json("no posts");
+      }
+    });
+  } catch (err) {
+    res.status("404").json(err);
+  }}
+module.exports = { createPost, getPosts, updateById, deletePost, SoftDelPost,deletePostById };

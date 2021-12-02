@@ -17,11 +17,11 @@ const createComment = async (req, res) => {
                 post: post._id,
               });
               const savedComm = await newComment.save();
-              await user.comments.push(savedComm._id);
+              // await user.comments.push(savedComm._id);
               await post.comments.push(savedComm._id);
               await user.save();
               await post.save();
-              res.status(200).json({ newComment });
+              res.status(200).json( newComment );
             } else {
               res.status(404).json("there is no post with this id");
             }
@@ -112,8 +112,8 @@ const deleteComment = async (req, res) => {
     const { id, commentId } = req.params;
     await commentModel
       .findOne({ owner: id })
-      .then(async (result) => {
-        if (result) {
+      .then(async (user) => {
+        if (user) {
           await commentModel.deleteOne({ _id: commentId }).then((result) => {
             if (result.deletedCount != 0) {
               res.status("200").json(result);
@@ -132,10 +132,27 @@ const deleteComment = async (req, res) => {
     res.status("404").json(err);
   }
 };
+//for admin
+const deleteCommentById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    commentModel.deleteOne({ _id: id }).then(async (result) => {
+      if (result.deletedCount != 0) {
+        console.log(result);
+        res.status("200").json(result);
+      } else {
+        res.status("404").json("no comment with this id");
+      }
+    });
+  } catch (err) {
+    res.status("404").json(err);
+  }
+};
 module.exports = {
   createComment,
   getComment,
   updateComment,
   deleteComment,
   SoftDelComment,
+  deleteCommentById,
 };

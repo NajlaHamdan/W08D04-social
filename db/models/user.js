@@ -16,16 +16,16 @@ const user = new mongoose.Schema({
       type: { type: mongoose.Schema.Types.ObjectId, ref: "post" },
     },
   ],
-  comments: [
-    {
-      type: { type: mongoose.Schema.Types.ObjectId, ref: "comment" },
-    },
-  ],
-  likes: [
-    {
-      type: { type: mongoose.Schema.Types.ObjectId, ref: "like" },
-    },
-  ],
+  // comments: [
+  //   {
+  //     type: { type: mongoose.Schema.Types.ObjectId, ref: "comment" },
+  //   },
+  // ],
+  // likes: [
+  //   {
+  //     type: { type: mongoose.Schema.Types.ObjectId, ref: "like" },
+  //   },
+  // ],
 });
 
 module.exports = mongoose.model("user", user);
