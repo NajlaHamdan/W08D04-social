@@ -23,5 +23,13 @@ the user can update spcific comment and post .
 ### Delete 
 the user can delete spcific comment and post .
 
-**Note: we use Json web tocken to generate tocken if the user logged in**.
+**Note: we use Json web tocken to generate tocken if the user logged in**.<br />
 **Note: we use bcrybt to hash password if the user registerd **.
+
+## functions for admin
+### delete comment
+Admin can delete any comment from any user.
+### delete post
+Admin can delete any post from any user.
+### remove user
+admin can delete any user account.
