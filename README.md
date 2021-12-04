@@ -5,15 +5,11 @@
 - jsonwebtoken 
 - bcrypt
 - mongoose
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
 # Schemas
 - uesr <br />
 | Email | Password | userName | Role | Posts |
 | ----- | -------- | -------- | ---- | ----- | 
-| String | String | String\(bcrybt\) | Array | Array |
+| String | String | String | Array | Array |
 - role
 - post
 - comment
