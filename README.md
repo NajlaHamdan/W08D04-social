@@ -7,9 +7,8 @@
 - mongoose
 # Schemas
 - uesr <br />
-|--------------------------------------------|
 | Email | Password | userName | Role | Posts |
-| ---- | ---- | ---- | ---- | ---- | 
+| ----- | -------- | -------- | ---- | ----- | 
 | String | String | String\(bcrybt\) | Array | Array |
 - role
 - post
