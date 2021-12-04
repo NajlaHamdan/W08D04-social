@@ -1,5 +1,5 @@
 # W08D04
-# package used 
+# Package used 
 - express
 - dotenv
 - jsonwebtoken 
@@ -11,7 +11,7 @@
 - post
 - comment
 - like
-# functions
+# Functions
 user can do to his/her comments and posts the following functions
 if the user has been registered or logged in  
 ### Create 
@@ -26,10 +26,10 @@ the user can delete spcific comment and post .
 **Note: we use Json web tocken to generate tocken if the user logged in**.<br />
 **Note: we use bcrybt to hash password if the user registerd**.
 
-## functions for admin
-### delete comment
+## Functions for admin
+### Delete comment
 Admin can delete any comment from any user.
-### delete post
+### Delete post
 Admin can delete any post from any user.
-### remove user
+### Remove user
 admin can delete any user account.
