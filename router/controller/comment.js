@@ -1,7 +1,7 @@
 const commentModel = require("./../../db/models/comment");
 const postModel = require("./../../db/models/post");
 const userModel = require("./../../db/models/user");
-
+// creaate comment after login 
 const createComment = async (req, res) => {
   try {
     const { id, postId, desc } = req.body;
@@ -37,7 +37,7 @@ const createComment = async (req, res) => {
     res.status(404).json(err);
   }
 };
-
+//get specific comment by id
 const getComment = async (req, res) => {
   try {
     const { id } = req.params;
@@ -52,10 +52,10 @@ const getComment = async (req, res) => {
     res.status("200").json(err);
   }
 };
-//soft delete
+//soft delete for specific comment by user that own the comment
 const SoftDelComment = async (req, res) => {
   try {
-    const { id, commentId, desc } = req.body;
+    const { id, commentId } = req.body;
     await commentModel
       .findOne({ owner: id })
       .then(async (result) => {
@@ -80,6 +80,7 @@ const SoftDelComment = async (req, res) => {
     res.status("404").json(err);
   }
 };
+//udate comment by id by the user that own the comment
 const updateComment = async (req, res) => {
   try {
     const { id, commentId, desc } = req.body;
@@ -107,6 +108,7 @@ const updateComment = async (req, res) => {
     res.status("404").json(err);
   }
 };
+//delete comment by id by the user that own the comment
 const deleteComment = async (req, res) => {
   try {
     const { id, commentId } = req.params;
@@ -148,6 +150,7 @@ const deleteCommentById = async (req, res) => {
     res.status("404").json(err);
   }
 };
+//export functions to use it in routes
 module.exports = {
   createComment,
   getComment,

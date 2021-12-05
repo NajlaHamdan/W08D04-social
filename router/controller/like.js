@@ -1,7 +1,7 @@
 const likeModel = require("./../../db/models/like");
 const postModel = require("./../../db/models/post");
 const userModel = require("./../../db/models/user");
-
+// make the post liked or unliked if it is already liked
 const toggleLike = async (req, res) => {
   try {
     const { id, postId } = req.body;

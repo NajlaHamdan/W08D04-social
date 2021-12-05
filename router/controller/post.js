@@ -1,6 +1,6 @@
 const postModel = require("./../../db/models/post");
 const userModel = require("./../../db/models/user");
-
+//create post after log in 
 const createPost = async (req, res) => {
   try {
     const { img, desc, id } = req.body;
@@ -26,7 +26,7 @@ const createPost = async (req, res) => {
     res.status("404").json(err);
   }
 };
-
+//get posts for one user by id
 const getPosts = (req, res) => {
   try {
     //id for the user
@@ -37,10 +37,10 @@ const getPosts = (req, res) => {
       .then(async (result) => {
         if (result) {
           console.log(result);
-          // find todos for the user and save it in array todos
+          // find posts for the user and save it in array todos
           const posts = await postModel.find({ owner: id });
           if (posts.length) {
-            //store todos name in array to display it in res
+            //store posts name in array to display it in res
             const postsName = [];
             posts.forEach((item) => {
               postsName.push(item.desc);
@@ -60,14 +60,14 @@ const getPosts = (req, res) => {
     res.status("404").json(err);
   }
 };
-
+//udate post by id by the user that own the post
 const updateById = async (req, res) => {
   try {
     const { desc, id, postId } = req.body;
     //find user
     await postModel.findOne({ owner: id }).then(async (result) => {
       if (result) {
-        const post = await postModel.findByIdAndUpdate(postId, { desc }); //.then(async (result) => {
+        const post = await postModel.findByIdAndUpdate(postId, { desc });
         if (post) {
           console.log(post);
           await post.save();
@@ -83,10 +83,10 @@ const updateById = async (req, res) => {
     res.status("404").json(err);
   }
 };
-//soft delete
+//soft delete by the user that own the comment
 const SoftDelPost = async (req, res) => {
   try {
-    const { id, postId, desc } = req.body;
+    const { id, postId } = req.body;
     await postModel
       .findOne({ owner: id })
       .then(async (result) => {
@@ -111,6 +111,7 @@ const SoftDelPost = async (req, res) => {
     res.status("404").json(err);
   }
 };
+//delete post by the user that own the post
 const deletePost = async (req, res) => {
   try {
     const { id, todoId } = req.params;
