@@ -32,5 +32,8 @@ Admin can delete any comment from any user.
 Admin can delete any post from any user.
 ### Remove user
 admin can delete any user account.
-# UML digram
+# DigramS
+## ER digram
+![alt text](./ERSocial.jpg)
+## UML digram
 ![alt text](./umlSocial.jpg)
