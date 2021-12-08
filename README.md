@@ -6,9 +6,6 @@
 - mongoose
 # Schemas
 - uesr <br />
-| Email | Password | userName | Role | Posts |
-| ----- | -------- | -------- | ---- | ----- | 
-| String | String | String | Array | Array |
 - role
 - post
 - comment
@@ -35,3 +32,5 @@ Admin can delete any comment from any user.
 Admin can delete any post from any user.
 ### Remove user
 admin can delete any user account.
+# UML digram
+![alt text](./umlSocial)
