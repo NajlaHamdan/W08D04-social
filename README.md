@@ -33,4 +33,4 @@ Admin can delete any post from any user.
 ### Remove user
 admin can delete any user account.
 # UML digram
-![alt text](./umlSocial)
+![alt text](./umlSocial.jpg)
