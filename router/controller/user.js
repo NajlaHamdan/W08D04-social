@@ -7,6 +7,18 @@ const jwt = require("jsonwebtoken");
 const salt = Number(process.env.SALT);
 const secret = process.env.SECRET;
 
+const googleSignIn=()=>{
+  let profile=googleUser.getBasicProfile();
+  if(profile){
+    res.status(200).json(profile)
+  }
+}
+const googleSignOut=()=>{
+  let auth2 = gapi.auth2.getAuthInstance();
+  auth2.signOut().then(function () {
+    console.log('User signed out.');
+  });
+}
 const checkPass = (password) => {
   const strong = new RegExp(
     "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
