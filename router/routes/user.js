@@ -8,7 +8,7 @@ const {
   removeAllUsers,
   deletePosts,
   deleteComments,
-  deletePostById,
+  forgetPassword,
 } = require("./../controller/user");
 
 const authentication = require("./../middleware/authentication");
@@ -30,5 +30,5 @@ routerUser.delete(
   authorization,
   deleteComments
 );
-
+routerUser.post("/forgetPassword", forgetPassword);
 module.exports = routerUser;
