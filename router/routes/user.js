@@ -9,6 +9,7 @@ const {
   deletePosts,
   deleteComments,
   forgetPassword,
+  googleSignIn
 } = require("./../controller/user");
 
 const authentication = require("./../middleware/authentication");
@@ -31,4 +32,5 @@ routerUser.delete(
   deleteComments
 );
 routerUser.post("/forgetPassword", forgetPassword);
+routerUser.post("/googleSignIn", googleSignIn);
 module.exports = routerUser;

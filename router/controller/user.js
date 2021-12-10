@@ -4,14 +4,14 @@ const commentModel = require("./../../db/models/comment");
 //require("dotenv").config();//already has configed
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const res = require("express/lib/response");
 const salt = Number(process.env.SALT);
 const secret = process.env.SECRET;
 
-const googleSignIn=()=>{
-  let profile=googleUser.getBasicProfile();
-  if(profile){
-    res.status(200).json(profile)
-  }
+const googleSignIn=(req,res)=>{
+  const {token}=req.body;
+  console.log(token);
+  res.status(200).json(token)
 }
 const googleSignOut=()=>{
   let auth2 = gapi.auth2.getAuthInstance();
@@ -172,4 +172,5 @@ module.exports = {
   deletePosts,
   deleteComments,
   forgetPassword,
+  googleSignIn
 };
