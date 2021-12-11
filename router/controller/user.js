@@ -4,21 +4,85 @@ const commentModel = require("./../../db/models/comment");
 //require("dotenv").config();//already has configed
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const res = require("express/lib/response");
+const { OAuth2Client } = require("google-auth-library");
 const salt = Number(process.env.SALT);
 const secret = process.env.SECRET;
+const user = new OAuth2Client(
+  "389990397434-ap6i1btg0ubfc79meg74hrt23msjf8ua.apps.googleusercontent.com"
+);
 
-const googleSignIn=(req,res)=>{
-  const {token}=req.body;
-  console.log(token);
-  res.status(200).json(token)
-}
-const googleSignOut=()=>{
+const googleSignIn = async (req, res) => {
+  // tokenId come from response object in the front end
+  const { token } = req.body;
+  // console.log(token);
+  const response = await user.verifyIdToken({
+    idToken: token,
+    audience:
+      "389990397434-ap6i1btg0ubfc79meg74hrt23msjf8ua.apps.googleusercontent.com",
+  });
+  // console.log(response.payload);
+  if (response) {
+    const { email_verified, name, email } = response.payload;
+    console.log(email_verified);
+    if (email_verified) {
+      // here we have two cases
+      //  1-this is the first time to login by google => we have to create user in database
+      //  2-this is second time to login with google => we have to check if the user found in our database and generate token
+      userModel
+        .findOne({email})
+        .then(async (result) => {
+          if (result) {
+            console.log("wehfweihfewhfehrferhgehg");
+            if (result.email == email) {
+              console.log(result.email);
+              const payload = {
+                role: result.role,
+              };
+              const options = {
+                expiresIn: "60m",
+              };
+              const token = await jwt.sign(payload, secret, options);
+              console.log(token);
+              const decrybtedName = await bcrypt.compare(name, result.userName);
+              if (decrybtedName) {
+                res.status("200").json({ result, token });
+              } else {
+               console.log("hi hkhukhkuk");
+                res.status("404").json("email or username is not valid");
+              }
+            } else {
+              res.status("404").json("email or username is not valid");
+            }
+          } else {
+            res.status(404).json("something wrong occured !!");
+          }
+        })
+        .catch(async (err) => {
+          //here the second case create user
+          //random password because password required in our database
+          let password = name + email + salt;
+          const hashedName = await bcrypt.hash(name, salt);
+          const newUser = new userModel({
+            userName: hashedName,
+            email,
+            password,
+          });
+          await newUser.save();
+          res.status(200).json(newUser);
+          console.log("here normally");
+          // res.status(404).json(err);
+        });
+    }
+  }
+
+  // res.status(404).json("somethingWrong");
+};
+const googleSignOut = () => {
   let auth2 = gapi.auth2.getAuthInstance();
   auth2.signOut().then(function () {
-    console.log('User signed out.');
+    console.log("User signed out.");
   });
-}
+};
 const checkPass = (password) => {
   const strong = new RegExp(
     "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
@@ -172,5 +236,5 @@ module.exports = {
   deletePosts,
   deleteComments,
   forgetPassword,
-  googleSignIn
+  googleSignIn,
 };
