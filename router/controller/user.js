@@ -5,12 +5,45 @@ const commentModel = require("./../../db/models/comment");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
+const nodemailer=require("nodemailer");
 const salt = Number(process.env.SALT);
 const secret = process.env.SECRET;
 const user = new OAuth2Client(
   "389990397434-ap6i1btg0ubfc79meg74hrt23msjf8ua.apps.googleusercontent.com"
 );
-
+const sendEmail=async({email},res)=>{
+  // const {email}=req.body;
+  rand=Math.floor((Math.random() * 100000) + 100000)
+  let transporter=nodemailer.createTransport({
+    service:'gamil',
+    auth:{
+      user:process.env.EMAIL,
+      pass:process.env.PASS
+    }
+  })
+  let message={
+    from :process.env.EMAIL,
+    to:email,
+    subject:"verified your email",
+    text:`hi please click here to verified your account ${rand}`
+  }
+  transporter.sendMail(message,(err,result)=>{
+    if(err){
+      console.log("there is error in sending message",err);
+      // res.status("404").json(err);
+    }else{
+      console.log("message sending succesfully ");
+      //res.status(200).json({message:result});
+      userModel.findOne({email}).then(async(result)=>{
+        if(result){
+          if(result.email==email){
+            await userModel.findByIdAndUpdate(result._id,{code:rand})
+          }
+        }
+      })
+    }
+  })
+}
 const googleSignIn = async (req, res) => {
   // tokenId come from response object in the front end
   const { token } = req.body;
@@ -126,6 +159,7 @@ const register = async (req, res) => {
     newUser
       .save()
       .then((result) => {
+        sendEmail(result);
         res.status("201").json(result);
       })
       .catch((err) => {
