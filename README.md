@@ -4,6 +4,8 @@
 - jsonwebtoken 
 - bcrypt
 - mongoose
+- nodemailer
+- google-auth-library
 # Schemas
 - uesr <br />
 - role
