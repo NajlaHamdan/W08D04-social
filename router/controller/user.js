@@ -5,45 +5,74 @@ const commentModel = require("./../../db/models/comment");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
-const nodemailer=require("nodemailer");
+const nodemailer = require("nodemailer");
 const salt = Number(process.env.SALT);
 const secret = process.env.SECRET;
 const user = new OAuth2Client(
   "389990397434-ap6i1btg0ubfc79meg74hrt23msjf8ua.apps.googleusercontent.com"
 );
-const sendEmail=async({email},res)=>{
+const sendEmail = async ({ email }, res) => {
   // const {email}=req.body;
-  rand=Math.floor((Math.random() * 100000) + 100000)
-  let transporter=nodemailer.createTransport({
-    service:'gamil',
-    auth:{
-      user:process.env.EMAIL,
-      pass:process.env.PASS
-    }
-  })
-  let message={
-    from :process.env.EMAIL,
-    to:email,
-    subject:"verified your email",
-    text:`hi please click here to verified your account ${rand}`
-  }
-  transporter.sendMail(message,(err,result)=>{
-    if(err){
-      console.log("there is error in sending message",err);
+  rand = Math.floor(Math.random() * 100000 + 100000);
+  // console.log(process.env.EMAIL);
+  // console.log(process.env.PASS);
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASS,
+    },
+  });
+  let message = {
+    from: process.env.EMAIL,
+    to: email,
+    subject: "verified your email",
+    text: `hello`,
+    html: `<h1> hello  </h1> to verified your account take this code ${rand}`,
+  };
+  await transporter.sendMail(message, (err, result) => {
+    if (err) {
+      console.log("there is error in sending message", err);
       // res.status("404").json(err);
-    }else{
+    } else {
       console.log("message sending succesfully ");
       //res.status(200).json({message:result});
-      userModel.findOne({email}).then(async(result)=>{
-        if(result){
-          if(result.email==email){
-            await userModel.findByIdAndUpdate(result._id,{code:rand})
+      userModel.findOne({ email }).then(async (result) => {
+        if (result) {
+          if (result.email == email) {
+            userModel
+              .findByIdAndUpdate(result._id, { code: rand })
+              .then(async (result) => {
+                if (result) {
+                  await result.save();
+                  // res.status(200).json({message:result});
+                } else {
+                  console.log("there is error in sending message");
+                  res.status("404").json(err);
+                }
+              });
           }
         }
-      })
+      });
     }
-  })
-}
+  });
+};
+const checkCode = async (req, res) => {
+  const { email, code } = req.body;
+  const result = await userModel.findOne({ $and: [ email , { code }] });
+  if (result) {
+    if (result.code == code) {
+      const response = await userModel.findByIdAndUpdate(result._id, {
+        verified: true,
+      });
+      await response.save();
+      res.status(200).json(true);
+      // return true
+    }
+  } else {
+    res.status(200).json(false);
+  }
+};
 const googleSignIn = async (req, res) => {
   // tokenId come from response object in the front end
   const { token } = req.body;
@@ -62,7 +91,7 @@ const googleSignIn = async (req, res) => {
       //  1-this is the first time to login by google => we have to create user in database
       //  2-this is second time to login with google => we have to check if the user found in our database and generate token
       userModel
-        .findOne({email})
+        .findOne({ email })
         .then(async (result) => {
           if (result) {
             console.log("wehfweihfewhfehrferhgehg");
@@ -80,7 +109,7 @@ const googleSignIn = async (req, res) => {
               if (decrybtedName) {
                 res.status("200").json({ result, token });
               } else {
-               console.log("hi hkhukhkuk");
+                console.log("hi hkhukhkuk");
                 res.status("404").json("email or username is not valid");
               }
             } else {
@@ -124,38 +153,41 @@ const checkPass = (password) => {
 };
 const forgetPassword = (req, res) => {
   const { email, password, confirmPass } = req.body;
+  // sendEmail(email);
+  // if(checkCode){console.log("true");}
   userModel
     .findOne({ email })
     .then(async (result) => {
       if (result) {
         if (password == confirmPass) {
           if (checkPass(password)) {
-            await userModel.updateOne({ email }, { password });
-            res.status(200).json(result);
+            const hashed = await bcrypt.hash(password, salt);
+            await userModel.updateOne({ email }, { password:hashed });
+            res.status(200).json(true);
           } else {
-            res.status(404).json("weak password");
+            res.status(200).json("weak password");
           }
         } else {
-          res.status(404).json("password does not match confirm password !!");
+          res.status(200).json("password does not match confirm password !!");
         }
       } else {
-        res.status(404).json("does not have account !!");
+        res.status(200).json("does not have account !!");
       }
     })
     .catch((err) => res.status(404).json(err));
 };
 const register = async (req, res) => {
-  const { email, password, userName, role } = req.body;
-  const hashed = await bcrypt.hash(userName, salt);
-  const newUser = new userModel({
-    role,
-    email,
-    userName: hashed,
-    password,
-  });
+  const { email, password, userName } = req.body;
   //strong
   //{ "email":"ain@ee.com", "password":"najLa1@2","userName":"Najla", "role":"61ac96f1bc01bd4bd3a4f039" }
   if (checkPass(password)) {
+    const hashed = await bcrypt.hash(password, salt);
+    const newUser = new userModel({
+      role:"61a75918e9839777023d716d",
+      email,
+      userName,
+      password: hashed,
+    });
     newUser
       .save()
       .then((result) => {
@@ -170,13 +202,15 @@ const register = async (req, res) => {
   }
 };
 const login = (req, res) => {
-  const { email, userName } = req.body;
+  const { emailORuserName, password } = req.body;
   userModel
-    .findOne({ $or: [{ email: email }, { userName: userName }] }) //with find will return email and say not valid if it is valid
+    .findOne({
+      $or: [{ email: emailORuserName }, { userName: emailORuserName }],
+    }) //with find will return email and say not valid if it is valid
     .then(async (result) => {
       if (result) {
         console.log(result);
-        if (result.email == email) {
+        if (result.verified) {
           console.log(result.email);
           const payload = {
             role: result.role,
@@ -185,17 +219,21 @@ const login = (req, res) => {
             expiresIn: "60m",
           };
           const token = await jwt.sign(payload, secret, options);
-          console.log(token);
-          const decrybtedName = await bcrypt.compare(userName, result.userName);
-          if (decrybtedName) {
+          console.log(token, "--", result.userName);
+          // res.status(200).json(result);
+          console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+          const decrybtedPass = await bcrypt.compare(password, result.password);
+          if (decrybtedPass) {
             res.status("200").json({ result, token });
           } else {
             //   console.log("hi");
             res.status("404").json("email or username is not valid");
           }
         } else {
-          // console.log("hi");
-          res.status("404").json("email or password is not valid");
+          //   // console.log("hi");
+          //   res.status("404").json("email or password is not valid");
+          // }else {
+          res.status(404).json("your account is not verified !!"); /////
         }
       } else {
         res.status("404").json("does not exist");
@@ -271,4 +309,5 @@ module.exports = {
   deleteComments,
   forgetPassword,
   googleSignIn,
+  checkCode,
 };

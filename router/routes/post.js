@@ -12,9 +12,9 @@ const {
 const authentication = require("./../middleware/authentication");
 const authorization = require("./../middleware/authorization");
 
-routerPost.post("/createPost",authentication, createPost);
-routerPost.get("/getPosts/:id",authentication, getPosts);
-routerPost.post("/updateById", authentication,updateById);
+routerPost.post("/createPost", createPost);
+routerPost.get("/getPosts/:id", getPosts);
+routerPost.post("/updateById",updateById);
 routerPost.delete("/deletePost/:id/:postId",authentication, deletePost);
 routerPost.post("/SoftDelPost",authentication, SoftDelPost);
 //for admin

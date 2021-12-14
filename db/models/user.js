@@ -8,7 +8,7 @@ const user = new mongoose.Schema({
     unique: true,
   },
   password: { type: String, required: true },
-  userName: { type: String, required: true, unique: true },
+  userName: { type: String, required: true, lowercase: true, unique: true },
   avatar: { type: String },
   role: [{ type: mongoose.Schema.Types.ObjectId, ref: "role" }],
   posts: [
@@ -16,8 +16,8 @@ const user = new mongoose.Schema({
       type: { type: mongoose.Schema.Types.ObjectId, ref: "post" },
     },
   ],
-  verified:{type:Boolean,default:false},
-  code:{type:String}
+  verified: { type: Boolean, default: false },
+  code: { type: String },
   // comments: [
   //   {
   //     type: { type: mongoose.Schema.Types.ObjectId, ref: "comment" },

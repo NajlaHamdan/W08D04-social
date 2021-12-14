@@ -45,7 +45,7 @@ const getPosts = (req, res) => {
             posts.forEach((item) => {
               postsName.push(item.desc);
             });
-            res.status("200").json(postsName);
+            res.status("200").json(posts);
           } else {
             res.status("404").json("no todos for this user");
           }
