@@ -41,14 +41,15 @@ const createComment = async (req, res) => {
 const getComment = async (req, res) => {
   try {
     const { id } = req.params;
-    await commentModel.findById(id).then((result) => {
-      if (result) {
+    const result= await commentModel.find({post:id})
+      if (result.length) {
         res.status("200").json(result);
       } else {
         res.status("404").json("there is no comment with this id");
       }
-    });
-  } catch (err) {
+  //   });
+  } 
+  catch (err) {
     res.status("200").json(err);
   }
 };

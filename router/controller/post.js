@@ -47,7 +47,7 @@ const getPosts = (req, res) => {
             });
             res.status("200").json(posts);
           } else {
-            res.status("404").json("no todos for this user");
+            res.status("404").json("no posts for this user");
           }
         } else {
           res.status("404").json("no user with this id");
@@ -56,6 +56,39 @@ const getPosts = (req, res) => {
       .catch((err) => {
         res.status("404").json(err);
       });
+  } catch (err) {
+    res.status("404").json(err);
+  }
+};
+const getPost=async (req, res) => {
+  try {
+    //id for the user
+    const { id } = req.params;
+    //find user to get his posts
+    // userModel
+    //   .findById(id)
+    //   .then(async (result) => {
+    //     if (result) {
+    //       console.log(result);
+          // find posts for the user and save it in array todos
+          const post = await postModel.findOne({ id });
+          if (post) {
+            //store posts name in array to display it in res
+            // const postsName = [];
+            // posts.forEach((item) => {
+            //   postsName.push(item.desc);
+            // });
+            res.status("200").json(post);
+          } else {
+            res.status("404").json("no todos for this user");
+          }
+        // } else {
+        //   res.status("404").json("no user with this id");
+        // }
+      // })
+      // .catch((err) => {
+      //   res.status("404").json(err);
+      // });
   } catch (err) {
     res.status("404").json(err);
   }
@@ -114,12 +147,12 @@ const SoftDelPost = async (req, res) => {
 //delete post by the user that own the post
 const deletePost = async (req, res) => {
   try {
-    const { id, todoId } = req.params;
+    const { id, postId } = req.params;
     await userModel.findById(id).then(async (result) => {
       if (result) {
         await postModel.findOne({ owner: id }).then(async (result) => {
           if (result) {
-            await postModel.deleteOne({ _id: todoId }).then((result) => {
+            await postModel.deleteOne({ _id: postId }).then((result) => {
               if (result.deletedCount != 0) {
                 res.status("200").json(result);
               } else {
@@ -157,6 +190,7 @@ const deletePostById = async (req, res) => {
 module.exports = {
   createPost,
   getPosts,
+  getPost,
   updateById,
   deletePost,
   SoftDelPost,
