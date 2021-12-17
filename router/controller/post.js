@@ -152,11 +152,12 @@ const deletePost = async (req, res) => {
       if (result) {
         await postModel.findOne({ owner: id }).then(async (result) => {
           if (result) {
-            await postModel.deleteOne({ _id: postId }).then((result) => {
+            await postModel.deleteOne({ _id: postId }).then(async(result) => {
               if (result.deletedCount != 0) {
+                await result.posts.save();
                 res.status("200").json(result);
               } else {
-                res.status("404").json("already deleted");
+                res.status("200").json("already deleted");
               }
             });
           } else {

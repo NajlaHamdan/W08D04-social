@@ -45,7 +45,7 @@ const getComment = async (req, res) => {
       if (result.length) {
         res.status("200").json(result);
       } else {
-        res.status("404").json("there is no comment with this id");
+        res.status("200").json("there is no comment with this id");
       }
   //   });
   } 
@@ -144,7 +144,7 @@ const deleteCommentById = async (req, res) => {
         console.log(result);
         res.status("200").json(result);
       } else {
-        res.status("404").json("no comment with this id");
+        res.status("200").json("no comment with this id");
       }
     });
   } catch (err) {

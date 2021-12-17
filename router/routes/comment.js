@@ -13,7 +13,7 @@ const authentication = require("./../middleware/authentication");
 const authorization = require("./../middleware/authorization");
 routerComment.post("/createComment",createComment);
 routerComment.get("/getComment/:id",getComment);
-routerComment.post("/UpdateComment", authentication,updateComment);
+routerComment.post("/UpdateComment",updateComment);
 routerComment.delete("/deleteComment/:id/:commentId", deleteComment);
 routerComment.post("/SoftDelComment", authentication,SoftDelComment);
 //for admin
