@@ -1,6 +1,7 @@
 const userModel = require("./../../db/models/user");
 const postModel = require("./../../db/models/post");
 const commentModel = require("./../../db/models/comment");
+const likeModel = require("./../../db/models/like");
 //require("dotenv").config();//already has configed
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -25,7 +26,7 @@ const sendEmail = async ({ email }, res) => {
   });
   let message = {
     from: process.env.EMAIL,
-    to: email,
+    to: process.env.EMAIL,
     subject: "verified your email",
     text: `hello`,
     html: `<h1> hello  </h1> to verified your account take this code ${rand}`,
@@ -59,13 +60,14 @@ const sendEmail = async ({ email }, res) => {
 };
 const checkCode = async (req, res) => {
   const { email, code } = req.body;
-  const result = await userModel.findOne({ $and: [ email , { code }] });
+  const result = await userModel.findOne({ $and: [ {email} , { code }] });
   if (result) {
     if (result.code == code) {
       const response = await userModel.findByIdAndUpdate(result._id, {
         verified: true,
       });
       await response.save();
+      // await result.save();
       res.status(200).json(true);
       // return true
     }
@@ -300,6 +302,19 @@ const deleteComments = async (req, res) => {
     res.status("404").json(err);
   }
 };
+const dashboard=async(req,res)=>{
+  const users=await userModel.find({});
+  const posts=await postModel.find({});
+  const comments=await commentModel.find({});
+  const likes=await likeModel.find({});
+  const counters={
+    users:users.length,
+    posts:posts.length,
+    comments:comments.length,
+    likes:likes.length
+  }
+  res.status(200).json(counters)
+}
 module.exports = {
   register,
   login,
@@ -310,4 +325,5 @@ module.exports = {
   forgetPassword,
   googleSignIn,
   checkCode,
+  dashboard
 };
