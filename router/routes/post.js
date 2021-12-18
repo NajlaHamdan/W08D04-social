@@ -13,11 +13,11 @@ const {
 const authentication = require("./../middleware/authentication");
 const authorization = require("./../middleware/authorization");
 
-routerPost.post("/createPost", createPost);
-routerPost.get("/getPosts/:id", getPosts);
-routerPost.get("/getPost/:id",getPost);
-routerPost.post("/updateById",updateById);
-routerPost.delete("/deletePost/:id/:postId", deletePost);
+routerPost.post("/createPost",authentication, createPost);
+routerPost.get("/getPosts/:id",authentication, getPosts);
+routerPost.get("/getPost/:id",authentication,getPost);
+routerPost.post("/updateById",authentication,updateById);
+routerPost.delete("/deletePost/:id/:postId",authentication, deletePost);
 routerPost.post("/SoftDelPost",authentication, SoftDelPost);
 //for admin
 routerPost.delete(

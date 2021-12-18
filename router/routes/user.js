@@ -11,7 +11,7 @@ const {
   forgetPassword,
   googleSignIn,
   checkCode,
-  dashboard
+  dashboard,
 } = require("./../controller/user");
 
 const authentication = require("./../middleware/authentication");
@@ -33,7 +33,7 @@ routerUser.delete(
   authorization,
   deleteComments
 );
-routerUser.get("/dashboard", dashboard);
+routerUser.get("/dashboard", authentication, authorization, dashboard);
 routerUser.post("/forgetPassword", forgetPassword);
 routerUser.post("/googleSignIn", googleSignIn);
 routerUser.post("/checkCode", checkCode);
