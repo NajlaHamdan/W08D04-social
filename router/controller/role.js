@@ -18,7 +18,7 @@ const getRole = (req, res) => {
   roleModel
     .find({})
     .then((result) => res.status("200").json(result))
-    .catch((err) => res.status("200").json(err));
+    .catch((err) => res.status("404").json(err));
 };
 
 module.exports = { createRole, getRole };
